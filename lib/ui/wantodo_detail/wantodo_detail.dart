@@ -91,7 +91,7 @@ class _WantodoDetailPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text('メモを$saveOrUpdateTextしますか？'),
+          content: Text('やりたいことを$saveOrUpdateTextしますか？'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -115,7 +115,7 @@ class _WantodoDetailPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: const Text('メモを削除しますか？'),
+          content: const Text('やりたいことを削除しますか？'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

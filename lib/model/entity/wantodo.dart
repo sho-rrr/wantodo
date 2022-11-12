@@ -24,6 +24,11 @@ class Wantodo {
     }
   }
 
+  void setDone() {
+    status = "DONE";
+    doneAt = DateTime.now();
+  }
+
   Wantodo({
     required this.id,
     required this.title,

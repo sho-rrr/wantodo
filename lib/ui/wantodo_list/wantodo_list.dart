@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wantodo/ui/wantodo_detail/wantodo_detail.dart';
+import 'package:wantodo/ui/wantodo_detail/wantodo_detail_view_model.dart';
 import 'package:wantodo/ui/wantodo_list/wantodo_list_view_model.dart';
 import 'package:wantodo/model/db/app_db.dart';
 import 'package:wantodo/model/entity/wantodo.dart';
@@ -31,7 +32,7 @@ class WantodoList extends StatelessWidget {
         body: page,
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-	  // メモ登録画面に遷移する
+	  // やりたいこと登録画面に遷移する
           onPressed: () => page.goToWantodoDetailScreen(context, null),
         ),
       ),
@@ -49,31 +50,43 @@ class _WantodoListPage extends StatelessWidget {
     }
 
     if (vm.wantodos.isEmpty) {
-      return const Center(child: const Text('メモが登録されていません'));
+      return const Center(child: const Text('やりたいことが登録されていません'));
     }
 
     return ListView.builder(
       itemCount: vm.wantodos.length,
       itemBuilder: (BuildContext context, int index) {
         var wantodo = vm.wantodos[index];
-        return _buildWantodoListTile(context, wantodo);
+        return _buildWantodoListTile(context, wantodo, index);
       },
     );
   }
 
-  Widget _buildWantodoListTile(BuildContext context, Wantodo wantodo) {
+  Widget _buildWantodoListTile(BuildContext context, Wantodo wantodo, int index) {
+    if(wantodo.status == "DONE") return Container();
     return Card(
-      child: ListTile(
-        title: Text(
-          wantodo.title,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(wantodo.getDetail()),
-        trailing: Text(wantodo.getCreatedAt()),
-	// メモ編集・削除画面に遷移する
-        onTap: () => goToWantodoDetailScreen(context, wantodo),
-      ),
+      child: Column(
+        children: [
+          IconButton(onPressed: () => done(context, index), icon: Icon(Icons.check_box_outline_blank)),
+          ListTile(
+            title: Text(
+              wantodo.title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(wantodo.status),
+            // subtitle: Text(wantodo.getDetail()),
+            trailing: Text(wantodo.getCreatedAt()),
+      // やりたいこと編集・削除画面に遷移する
+            onTap: () => goToWantodoDetailScreen(context, wantodo),
+          ),
+        ]
+      )
     );
+  }
+
+  void done(BuildContext context, int index) {
+    var vm = Provider.of<WantodoListViewModel>(context, listen: false);
+    vm.updateDone(index);
   }
 
   void goToWantodoDetailScreen(BuildContext context, Wantodo? wantodo) {

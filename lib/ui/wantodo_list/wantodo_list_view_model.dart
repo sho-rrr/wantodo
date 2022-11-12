@@ -26,9 +26,14 @@ class WantodoListViewModel extends ChangeNotifier {
   void search(String keyword) async {
     _startLoading();
     _wantodos = await _repository.search(keyword);
-    print(_isLoading);
     _finishLoading();
-    print(_isLoading);
+  }
+
+  void updateDone(int index) async {
+    _startLoading();
+    _wantodos[index].setDone();
+    _repository.update(_wantodos[index]);
+    _finishLoading();
   }
 
   void _startLoading() {
